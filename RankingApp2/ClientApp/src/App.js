@@ -3,20 +3,43 @@ import { Route, Routes } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import { Layout } from './components/Layout';
 import './custom.css';
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
-export default class App extends Component {
-  static displayName = App.name;
+const client = new ApolloClient({
+    uri: "http://localhost:8080/v1/graphql",
+    cache: new InMemoryCache(),
+});
 
-  render() {
+function App() {
     return (
-      <Layout>
-        <Routes>
-          {AppRoutes.map((route, index) => {
-            const { element, ...rest } = route;
-            return <Route key={index} {...rest} element={element} />;
-          })}
-        </Routes>
-      </Layout>
+        <ApolloProvider client={client}>
+            <Layout>
+                <Routes>
+                    {AppRoutes.map((route, index) => {
+                        const { element, ...rest } = route;
+                        return <Route key={index} {...rest} element={element} />;
+                    })}
+                </Routes>
+            </Layout>
+        </ApolloProvider>
     );
-  }
 }
+
+export default App;
+
+//export default class App extends Component {
+//  static displayName = App.name;
+
+//  render() {
+//    return (
+//      <Layout>
+//        <Routes>
+//          {AppRoutes.map((route, index) => {
+//            const { element, ...rest } = route;
+//            return <Route key={index} {...rest} element={element} />;
+//          })}
+//        </Routes>
+//      </Layout>
+//    );
+//  }
+//}
